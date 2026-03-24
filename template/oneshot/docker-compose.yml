@@ -1,0 +1,20 @@
+services:
+  # ===========================================================================
+  # TACHE PERSONNALISÉE (DOCKERFILE)
+  # Utilisez ceci pour exécuter vos propres scripts
+  # ===========================================================================
+  <NOM_DE_VOTRE_TACHE_CUSTOM>:
+    container_name: <NOM_CONTENEUR_CUSTOM>
+
+    # Construction de l'image à partir d'un dossier
+    # Exemple : ./scripts/mon_script_backup
+    build: <DOSSIER_DU_SCRIPT>
+    
+    # Volumes : INDISPENSABLE pour récupérer le résultat de la tâche !
+    # Sans volume, le fichier généré disparaît avec le conteneur.
+    volumes:
+      - ./output:/app/output
+
+    # Configuration du script (décommenter si besoin)
+    # environment:
+    #   - <VARIABLE_CONFIG>=<VALEUR>

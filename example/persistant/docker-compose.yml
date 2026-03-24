@@ -1,0 +1,49 @@
+services:
+  # ===========================================================================
+  # SERVICE 1 : SERVEUR WEB (APACHE) - AVEC FICHIER PERSONNALISÉ
+  # ===========================================================================
+  mon_site_web:
+    container_name: demo_apache
+    
+    # Construction de l'image à partir du dossier ./web
+    build: 
+      context: ./web
+      dockerfile: Dockerfile
+
+    # Accès via http://localhost:8080
+    ports:
+      - "8080:80"
+
+    # Volume : Le dossier ./web/html sur votre PC est lié à /var/www/html
+    # Modifiez index.html et rafraichissez la page !
+    volumes:
+      - ./web/html:/usr/local/apache2/htdocs/
+
+    # Liens réseaux : Permet au serveur web de contacter la base de données
+    # par son nom de service : 'ma_base_de_donnees'
+    depends_on:
+      - ma_base_de_donnees
+
+  # ===========================================================================
+  # SERVICE 2 : BASE DE DONNEES (MARIADB) - IMAGE OFFICIELLE
+  # ===========================================================================
+  ma_base_de_donnees:
+    container_name: demo_mariadb
+    
+    # Image officielle MariaDB (compatible MySQL, plus open-source)
+    image: mariadb:latest
+
+    # Configuration obligatoire
+    environment:
+      - MARIADB_ROOT_PASSWORD=secret
+      - MARIADB_DATABASE=ma_base
+      - MARIADB_USER=mon_user
+      - MARIADB_PASSWORD=mon_pass
+
+    # Volume nommé (géré par Docker) pour ne pas perdre les données
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+# Déclaration du volume nommé
+volumes:
+  mariadb_data:

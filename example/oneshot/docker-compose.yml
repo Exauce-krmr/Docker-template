@@ -1,0 +1,18 @@
+services:
+  # Service : générateur de mot de passe
+  # Ce conteneur va générer un mot de passe aléatoire et l'écrire dans un fichier.
+  password_generator:
+    container_name: generateur_mdp_demo
+    build: .
+    
+    # Volumes :
+    # Nous lions le dossier 'resultats' de notre PC au dossier '/output' du conteneur.
+    # Ainsi, le fichier créé par le script sera accessible sur notre machine.
+    volumes:
+      - ./resultats:/output
+
+    # Variables d'environnement :
+    # Configuration du script sans modifier le code.
+    environment:
+      - LONGUEUR_MDP=16
+      - FICHIER_RESULTAT=mon_nouveau_mdp.txt

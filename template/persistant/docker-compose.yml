@@ -1,0 +1,39 @@
+services:
+
+  # Service avec Dockerfile
+
+  <NOM_SERVICE_CUSTOM>:
+    container_name: <NOM_DU_CONTENEUR_CUSTOM>
+    
+    # Indiquez le dossier où se trouve votre Dockerfile
+    # Exemple : ./backend
+    build: <DOSSIER_DU_SERVICE>
+
+    # Accès depuis votre navigateur : http://localhost:<PORT_PC>
+    ports:
+      - "<PORT_PC>:<PORT_CONTENEUR>"
+
+    # Persistance des données
+    volumes:
+      # Lier un dossier de votre PC au conteneur
+      - ./<DOSSIER_DU_SERVICE>/src:/var/www/html
+
+  # Service avec Image
+
+  <NOM_SERVICE_DB>:
+    container_name: <NOM_DU_CONTENEUR_DB>
+    
+    # Nom de l'image officielle (ex: mariadb:latest)
+    image: <NOM_IMAGE>:<TAG_VERSION>
+
+    # Configuration (Mots de passe, utilisateurs...)
+    environment:
+      - <VARIABLE_CONFIG>=<VALEUR>
+
+    # Volume géré par Docker (recommandé pour les bases de données)
+    volumes:
+      - <NOM_VOLUME_DATA>:<CHEMIN_INTERNE_DATA>
+
+# Déclaration des volumes gérés par Docker (décommenter si besoin)
+#volumes:
+#  <NOM_VOLUME_DATA>:
