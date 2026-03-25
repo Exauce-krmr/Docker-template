@@ -1,39 +1,81 @@
 services:
+  # ===========================================================================
+  # SERVICE PERSISTANT AVEC DOCKERFILE (ex : votre serveur web, votre API...)
+  #
+  # ❓ One-shot ou persistant ?     → docs/Dockerfile & docker-compose.md
+  # ❓ Doc complète docker-compose  → docs/docker-compose.md
+  # ===========================================================================
 
-  # Service avec Dockerfile
+  # ❓ Nommer votre service → docs/docker-compose.md#3-services--la-racine-de-tout
+  <NOM_SERVICE>:
 
-  <NOM_SERVICE_CUSTOM>:
-    container_name: <NOM_DU_CONTENEUR_CUSTOM>
-    
-    # Indiquez le dossier où se trouve votre Dockerfile
-    # Exemple : ./backend
+    # ❓ docs/docker-compose.md#4-container_name--nommer-le-conteneur
+    container_name: <NOM_CONTENEUR>
+
+    # Chemin vers le dossier qui contient votre Dockerfile.
+    # Exemple : build: ./backend
+    #
+    # ❓ docs/docker-compose.md#6-build--construire-depuis-un-dockerfile
     build: <DOSSIER_DU_SERVICE>
 
     # Accès depuis votre navigateur : http://localhost:<PORT_PC>
+    # Format : - "<port_sur_votre_machine>:<port_dans_le_conteneur>"
+    #
+    # ❓ docs/docker-compose.md#7-ports--ouvrir-des-ports
     ports:
       - "<PORT_PC>:<PORT_CONTENEUR>"
 
-    # Persistance des données
+    # Lier un dossier de votre PC au conteneur.
+    # Utile pour voir les changements sans reconstruire l'image.
+    # Format : - ./dossier_sur_votre_pc:/dossier_dans_le_conteneur
+    #
+    # ❓ docs/docker-compose.md#8-volumes--persister-les-données
     volumes:
-      # Lier un dossier de votre PC au conteneur
-      - ./<DOSSIER_DU_SERVICE>/src:/var/www/html
+      - <DOSSIER_PC>:<DOSSIER_CONTENEUR>
 
-  # Service avec Image
+    # Variables de configuration du service.
+    # Décommentez si votre service a besoin de configuration (mots de passe, etc.)
+    #
+    # ❓ docs/docker-compose.md#9-environment--variables-de-configuration
+    # environment:
+    #   - <MA_VARIABLE>=<VALEUR>
 
+
+  # ===========================================================================
+  # SERVICE AVEC IMAGE OFFICIELLE (ex : base de données, cache...)
+  # ===========================================================================
+
+  # ❓ Nommer votre service → docs/docker-compose.md#3-services--la-racine-de-tout
   <NOM_SERVICE_DB>:
-    container_name: <NOM_DU_CONTENEUR_DB>
-    
-    # Nom de l'image officielle (ex: mariadb:latest)
-    image: <NOM_IMAGE>:<TAG_VERSION>
 
-    # Configuration (Mots de passe, utilisateurs...)
-    environment:
-      - <VARIABLE_CONFIG>=<VALEUR>
+    # ❓ docs/docker-compose.md#4-container_name--nommer-le-conteneur
+    container_name: <NOM_CONTENEUR_DB>
 
-    # Volume géré par Docker (recommandé pour les bases de données)
+    # Nom de l'image officielle depuis Docker Hub.
+    # Exemples : mariadb:latest  /  redis:alpine  /  postgres:15
+    #
+    # ❓ docs/docker-compose.md#5-image--utiliser-une-image-existante
+    image: <NOM_IMAGE>:<TAG>
+
+    # Variables de configuration de l'image officielle.
+    # Consultez la page Docker Hub de l'image pour connaître les variables disponibles.
+    #
+    # ❓ docs/docker-compose.md#9-environment--variables-de-configuration
+    # environment:
+    #   - <MA_VARIABLE>=<VALEUR>
+
+    # Volume nommé pour persister les données (recommandé pour les bases de données).
+    # Les données survivent à docker-compose down.
+    #
+    # ❓ docs/docker-compose.md#8-volumes--persister-les-données
+    # ❓ docs/docker-compose.md#10-volumes-niveau-racine--volumes-nommés
     volumes:
-      - <NOM_VOLUME_DATA>:<CHEMIN_INTERNE_DATA>
+      - <NOM_VOLUME>:<CHEMIN_INTERNE>
 
-# Déclaration des volumes gérés par Docker (décommenter si besoin)
+
+# Déclarez ici les volumes nommés utilisés dans les services ci-dessus.
+# ⚠️  Obligatoire si vous utilisez des volumes nommés, sinon Docker retourne une erreur.
+#
+# ❓ docs/docker-compose.md#10-volumes-niveau-racine--volumes-nommés
 #volumes:
-#  <NOM_VOLUME_DATA>:
+#  <NOM_VOLUME>:

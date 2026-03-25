@@ -1,20 +1,37 @@
 services:
   # ===========================================================================
-  # TACHE PERSONNALISÉE (DOCKERFILE)
-  # Utilisez ceci pour exécuter vos propres scripts
+  # TACHE ONE-SHOT PERSONNALISÉE
+  # Utilisez ceci pour exécuter vos propres scripts.
+  #
+  # ❓ One-shot ou persistant ?     → docs/Dockerfile & docker-compose.md
+  # ❓ Doc complète docker-compose  → docs/docker-compose.md
   # ===========================================================================
-  <NOM_DE_VOTRE_TACHE_CUSTOM>:
-    container_name: <NOM_CONTENEUR_CUSTOM>
 
-    # Construction de l'image à partir d'un dossier
-    # Exemple : ./scripts/mon_script_backup
+  # ❓ Nommer votre service → docs/docker-compose.md#3-services--la-racine-de-tout
+  <NOM_DE_VOTRE_TACHE>:
+
+    # ❓ docs/docker-compose.md#4-container_name--nommer-le-conteneur
+    container_name: <NOM_CONTENEUR>
+
+    # Chemin vers le dossier qui contient votre Dockerfile.
+    # Exemple : build: .          (dossier courant)
+    # Exemple : build: ./scripts  (sous-dossier)
+    #
+    # ❓ docs/docker-compose.md#6-build--construire-depuis-un-dockerfile
     build: <DOSSIER_DU_SCRIPT>
-    
-    # Volumes : INDISPENSABLE pour récupérer le résultat de la tâche !
-    # Sans volume, le fichier généré disparaît avec le conteneur.
-    volumes:
-      - ./output:/app/output
 
-    # Configuration du script (décommenter si besoin)
+    # INDISPENSABLE pour récupérer le résultat sur votre machine !
+    # Sans volume, tout fichier créé dans le conteneur disparaît à la fin.
+    # Format : - ./dossier_sur_votre_pc:/dossier_dans_le_conteneur
+    #
+    # ❓ docs/docker-compose.md#8-volumes--persister-les-données
+    volumes:
+      - <DOSSIER_PC>:<DOSSIER_CONTENEUR>
+
+    # Variables de configuration transmises à votre script.
+    # Décommentez et remplissez si votre script utilise des variables d'environnement.
+    # Votre script y accède avec : MA_VARIABLE=${MA_VARIABLE:-valeur_par_defaut}
+    #
+    # ❓ docs/docker-compose.md#9-environment--variables-de-configuration
     # environment:
-    #   - <VARIABLE_CONFIG>=<VALEUR>
+    #   - <MA_VARIABLE>=<VALEUR>

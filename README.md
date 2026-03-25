@@ -3,14 +3,14 @@
 Ce projet contient des modèles (**Templates**) prêts à l'emploi et des exemples concrets pour vous aider à démarrer avec Docker. 
 Il sert également de **référence technique**.
 
-## Structure du Projet
+*Important à lire*
+---
+Ce projet et documenter et contient des exmplication sur les dockerfile et les docker-compose.yaml
+Vous trouverez ci-dessous la doc des commandes.
 
-*   **`template/`** : Des bases propres à copier-coller.
-    *   **`oneshot/`** : Pour des scripts qui s'exécutent une fois (backup, traitement...).
-    *   **`persistant/`** : Pour des serveurs (Web, BDD...) qui tournent en continu.
-*   **`example/`** : Des démonstrations fonctionnelles.
-    *   **`oneshot/`** : Un générateur de mot de passe.
-    *   **`persistant/`** : Un site Web Apache + Base de données MySQL.
+**Utiliser la cheatSheets comme table des matières** _(en cliquant sur la commande vous arrivez sur sa documentation)_
+
+Pour la documentation des dockerfile et docker-compose.yaml aller [ici](https://docs.docker.com/compose/compose-file/)
 
 ---
 
@@ -81,6 +81,7 @@ Cliquez sur une commande pour voir les détails.
 **Supprime un conteneur.**
 *   `docker rm mon_conteneur` : Doit être arrêté avant.
 *   `docker rm -f mon_conteneur` : Force la suppression.
+*   `docker rm -f $(docker ps -aq)` : Supprimer TOUS les conteneurs (même actifs).
 
 ---
 

@@ -1,49 +1,66 @@
 services:
   # ===========================================================================
-  # SERVICE 1 : SERVEUR WEB (APACHE) - AVEC FICHIER PERSONNALISÉ
+  # EXEMPLE PERSISTANT : Site web Apache + Base de données MariaDB
+  # Lancez avec : docker-compose up -d
+  # Accès : http://localhost:8080
+  #
+  # ❓ Doc complète docker-compose → docs/docker-compose.md
   # ===========================================================================
-  mon_site_web:
-    container_name: demo_apache
-    
-    # Construction de l'image à partir du dossier ./web
-    build: 
-      context: ./web
-      dockerfile: Dockerfile
 
-    # Accès via http://localhost:8080
+
+  # ─── SERVICE 1 : Serveur web Apache ────────────────────────────────────────
+
+  # ❓ docs/docker-compose.md#3-services--la-racine-de-tout
+  mon_site_web:
+
+    # ❓ docs/docker-compose.md#4-container_name--nommer-le-conteneur
+    container_name: demo_apache
+
+    # L'image est construite depuis le Dockerfile dans ./web.
+    # ❓ docs/docker-compose.md#6-build--construire-depuis-un-dockerfile
+    build: ./web
+
+    # http://localhost:8080 sur votre machine → port 80 dans le conteneur.
+    # ❓ docs/docker-compose.md#7-ports--ouvrir-des-ports
     ports:
       - "8080:80"
 
-    # Volume : Le dossier ./web/html sur votre PC est lié à /var/www/html
-    # Modifiez index.html et rafraichissez la page !
+    # Le dossier ./web/html sur votre PC est lié au dossier servi par Apache.
+    # Modifiez index.html et rafraîchissez votre navigateur — pas de rebuild !
+    # ❓ docs/docker-compose.md#8-volumes--persister-les-données
     volumes:
       - ./web/html:/usr/local/apache2/htdocs/
 
-    # Liens réseaux : Permet au serveur web de contacter la base de données
-    # par son nom de service : 'ma_base_de_donnees'
-    depends_on:
-      - ma_base_de_donnees
 
-  # ===========================================================================
-  # SERVICE 2 : BASE DE DONNEES (MARIADB) - IMAGE OFFICIELLE
-  # ===========================================================================
+  # ─── SERVICE 2 : Base de données MariaDB ───────────────────────────────────
+
+  # ❓ docs/docker-compose.md#3-services--la-racine-de-tout
   ma_base_de_donnees:
+
+    # ❓ docs/docker-compose.md#4-container_name--nommer-le-conteneur
     container_name: demo_mariadb
-    
-    # Image officielle MariaDB (compatible MySQL, plus open-source)
+
+    # Image officielle MariaDB — pas besoin de Dockerfile.
+    # ❓ docs/docker-compose.md#5-image--utiliser-une-image-existante
     image: mariadb:latest
 
-    # Configuration obligatoire
+    # Variables de configuration requises par l'image MariaDB.
+    # Le service "mon_site_web" peut joindre cette base via l'hôte "ma_base_de_donnees".
+    # ❓ docs/docker-compose.md#9-environment--variables-de-configuration
     environment:
       - MARIADB_ROOT_PASSWORD=secret
       - MARIADB_DATABASE=ma_base
       - MARIADB_USER=mon_user
       - MARIADB_PASSWORD=mon_pass
 
-    # Volume nommé (géré par Docker) pour ne pas perdre les données
+    # Volume nommé : les données de la base survivent à docker-compose down.
+    # ❓ docs/docker-compose.md#8-volumes--persister-les-données
+    # ❓ docs/docker-compose.md#10-volumes-niveau-racine--volumes-nommés
     volumes:
       - mariadb_data:/var/lib/mysql
 
-# Déclaration du volume nommé
+
+# Déclaration obligatoire du volume nommé utilisé ci-dessus.
+# ❓ docs/docker-compose.md#10-volumes-niveau-racine--volumes-nommés
 volumes:
   mariadb_data:
